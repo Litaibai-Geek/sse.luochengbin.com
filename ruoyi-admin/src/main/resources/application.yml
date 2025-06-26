@@ -3,15 +3,28 @@ ruoyi:
   # 名称
   name: RuoYi
   # 版本
-  version: 3.9.0
+  version: 3.8.7
   # 版权年份
-  copyrightYear: 2025
+  copyrightYear: 2023
+  # 实例演示开关
+  demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
   profile: D:/ruoyi/uploadPath
   # 获取ip地址开关
   addressEnabled: false
   # 验证码类型 math 数字计算 char 字符验证
   captchaType: math
+
+# 火山引擎配置
+volcengine:
+  ark:
+    api-key: 8d6d4836-30fb-4a45-8930-7c2d1d44dc84
+    base-url: https://ark.cn-beijing.volces.com/api/v3
+    model: deepseek-r1-250120
+    timeout: 1800
+    connect-timeout: 20
+    connection-pool-size: 5
+    connection-pool-keep-alive: 1
 
 # 开发环境配置
 server:
@@ -68,13 +81,13 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: localhost
+    host: 111.173.104.51
     # 端口，默认为6379
     port: 6379
     # 数据库索引
     database: 0
     # 密码
-    password:
+    password: redislcb..
     # 连接超时时间
     timeout: 10s
     lettuce:
