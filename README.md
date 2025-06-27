@@ -125,7 +125,22 @@ event: close
 # 1.没有返回开始、结束标记，导致一直重复请求问题。
 解决方法：参考deepseek返回数据格式，发现它返回了开始标记(event: ready)和结束标记(event: close)。
 
+## deepseek后端参考返回数据格式：
+
+```
+event: ready
+
+data: {"v": "用户"}
+
+data: {"v": "问"}
+
+data: {"v": "也很"}
+
+event: close
+```
+
 # 2.本地运行，数据是实时返回的，部署到服务器上发现会等待数据加载完，一次性返回
+
 解决方法：通过资料查询，发现是nginx做了数据缓存，修改nginx配置，配置SSE相关配置：
 ```
     location /prod-api/ {
@@ -146,21 +161,6 @@ event: close
     }
 
 ```
-
-## deepseek后端参考返回数据格式：
-
-```
-event: ready
-
-data: {"v": "用户"}
-
-data: {"v": "问"}
-
-data: {"v": "也很"}
-
-event: close
-```
-
 
 ## 项目部署
 - 1.购买域名：https://www.spaceship.com/
