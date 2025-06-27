@@ -115,6 +115,28 @@ event: close
 # 1.没有返回开始、结束标记，导致一直请求重复问题。
 解决方法：参考deepseek返回数据格式，发现它返回了开始标记(event: ready)和结束标记(event: close)。
 
+# 2.本地运行，数据是实时返回的，部署到服务器上发现会等待数据加载完，一次性返回
+解决方法：通过资料查询，发现是nginx做了数据缓存，修改nginx配置,配置SSE相关配置：
+``
+    location /prod-api/ {
+    proxy_pass http://localhost:18888/;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+        # SSE 相关配置
+        proxy_set_header Connection '';
+        proxy_http_version 1.1;
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+        
+        # 确保实时传输
+        chunked_transfer_encoding off;
+        proxy_set_header X-Accel-Buffering no;
+    }
+
+``
+
 ## deepseek后端参考返回数据格式：
 
 ``

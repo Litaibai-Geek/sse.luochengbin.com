@@ -14,6 +14,8 @@ import javax.annotation.PreDestroy;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -21,6 +23,7 @@ public class ChatService {
     private final VolcengineConfig config;
     private final LocalChatService localChatService;
     private ArkService arkService;
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     public ChatService(VolcengineConfig config, LocalChatService localChatService) {
         this.config = config;
@@ -57,6 +60,7 @@ public class ChatService {
         if (arkService != null) {
             arkService.shutdownExecutor();
         }
+        executorService.shutdown();
     }
 
     public void streamChat(String prompt, SseEmitter emitter) {
@@ -65,54 +69,62 @@ public class ChatService {
             return;
         }
 
-        try {
-            // 发送ready事件
-            emitter.send(SseEmitter.event()
-                .name("ready")
-                .data("连接已就绪"));
+        executorService.execute(() -> {
+            try {
+                // 发送ready事件
+                emitter.send(SseEmitter.event()
+                    .name("ready")
+                    .data("连接已就绪\n"));
 
-            List<ChatMessage> messages = new ArrayList<>();
-            messages.add(ChatMessage.builder()
-                .role(ChatMessageRole.USER)
-                .content(prompt)
-                .build());
+                // 模拟思考时间
+                Thread.sleep(1000);
 
-            ChatCompletionRequest request = ChatCompletionRequest.builder()
-                .model(config.getModel())
-                .messages(messages)
-                .build();
+                // 准备API请求
+                List<ChatMessage> messages = new ArrayList<>();
+                messages.add(ChatMessage.builder()
+                    .role(ChatMessageRole.USER)
+                    .content(prompt)
+                    .build());
 
-            StringBuilder responseBuilder = new StringBuilder();
+                ChatCompletionRequest request = ChatCompletionRequest.builder()
+                    .model(config.getModel())
+                    .messages(messages)
+                    .build();
 
-            arkService.streamChatCompletion(request)
-                .doOnError(throwable -> {
-                    emitter.completeWithError(throwable);
-                })
-                .blockingForEach(delta -> {
-                    if (!delta.getChoices().isEmpty()) {
-                        String content = (String) delta.getChoices().get(0).getMessage().getContent();
-                        if (content != null && !content.isEmpty()) {
-                            responseBuilder.append(content);
-                            // 将新内容按字符发送
-                            char[] chars = content.toCharArray();
-                            for (char c : chars) {
-                                emitter.send(SseEmitter.event()
-                                    .name("message")
-                                    .data("{\"v\": \"" + c + "\"}"));
-                                Thread.sleep(100); // 模拟打字速度
+                // 收集API响应
+                StringBuilder responseBuilder = new StringBuilder();
+
+                // 发送API请求并处理响应
+                arkService.streamChatCompletion(request)
+                    .doOnError(throwable -> {
+                        emitter.completeWithError(throwable);
+                    })
+                    .blockingForEach(delta -> {
+                        if (!delta.getChoices().isEmpty()) {
+                            String content = (String) delta.getChoices().get(0).getMessage().getContent();
+                            if (content != null && !content.isEmpty()) {
+                                responseBuilder.append(content);
+                                // 将新内容按字符发送，每个字符后面加换行
+                                char[] chars = content.toCharArray();
+                                for (char c : chars) {
+                                    emitter.send(SseEmitter.event()
+                                        .name("message")
+                                        .data("{\"v\": \"" + c + "\"}\n"));
+                                    Thread.sleep(100); // 模拟打字速度
+                                }
                             }
                         }
-                    }
-                });
+                    });
 
-            // 发送close事件
-            emitter.send(SseEmitter.event()
-                .name("close")
-                .data("传输完成"));
+                // 发送close事件
+                emitter.send(SseEmitter.event()
+                    .name("close")
+                    .data("传输完成\n"));
 
-            emitter.complete();
-        } catch (Exception e) {
-            emitter.completeWithError(e);
-        }
+                emitter.complete();
+            } catch (Exception e) {
+                emitter.completeWithError(e);
+            }
+        });
     }
 } 
