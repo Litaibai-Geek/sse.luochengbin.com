@@ -31,7 +31,7 @@ public class LocalChatService {
                     emitter.send(SseEmitter.event()
                         .name("message")
                         .data("{\"v\": \"" + c + "\"}"));
-                    Thread.sleep(50); // 模拟打字速度
+                    Thread.sleep(100); // 模拟打字速度
                 }
 
                 // 发送close事件

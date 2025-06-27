@@ -94,6 +94,7 @@ event: close
    
 
 ## 项目使用说明
+<img src="https://luochengbin.com/static/img/sse/ys.png"/>
 1.访问：https://luochengbin.com/sse
 2.默认账号密码登录：admin    admin123
 3.输入框输入问题即可使用
