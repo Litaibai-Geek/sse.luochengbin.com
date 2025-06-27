@@ -69,7 +69,7 @@
         </div>
         <div class="footer-text">
           内容由AI生成，仅供参考，长内容需要思考，请耐心等待！
-          <a href="https://github.com/Litaibai-Geek/sse.luochengbin.com">GitHub源码以及开发过程详解</a>
+          <br><strong><a href="https://github.com/Litaibai-Geek/sse.luochengbin.com" target="_blank">GitHub源码以及开发过程详解</a></strong>
         </div>
       </div>
     </div>
