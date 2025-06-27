@@ -167,11 +167,11 @@ event: close
 - 2.前后端修改为生产环境：/prod-api/，运行bin/package.bat 打成jar包，上传到服务器
 - 3.npm run build:prod ，生成静态文件，上传到服务器
 - 4.运行后端程序
-  ``
-  ps -ef | grep java
-  kill -9 xxx
-  nohup java -jar ruoyi-admin-sse.jar > output.log 2>&1 &
-  ``
+```
+    ps -ef | grep java
+    kill -9 xxx
+    nohup java -jar ruoyi-admin-sse.jar > output.log 2>&1 &
+```
 - 5.DNS解析到服务器
 - 6.申请SSL证书
 - 7.修改nginx配置
