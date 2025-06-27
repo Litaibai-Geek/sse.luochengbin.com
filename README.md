@@ -101,12 +101,13 @@ event: close
     DeepSeek模式：后台调用火山引擎提供的deepseek-r1-250120，返回结果内容，流式传输到前端解析
     Local模式：本地模式，后台模拟数据，返回结果内容，流式传输到前端解析
 
-## Java 服务端实现细节
+## Java 服务端代码实现细节
 <a href="https://github.com/Litaibai-Geek/sse.luochengbin.com/tree/master/ruoyi-admin/src/main/java/com/ruoyi/web/controller/sse">主要代码，统一放在sse包下，方便查看</a>
-<a href="https://github.com/Litaibai-Geek/sse.luochengbin.com/blob/master/ruoyi-admin/src/main/java/com/ruoyi/web/controller/sse/SseController.java">SseController</a>
-<a href="https://github.com/Litaibai-Geek/sse.luochengbin.com/blob/master/ruoyi-admin/src/main/java/com/ruoyi/web/controller/sse/service/ChatService.java">ChatService</a>
+<a href="https://github.com/Litaibai-Geek/sse.luochengbin.com/blob/master/ruoyi-admin/src/main/java/com/ruoyi/web/controller/sse/SseController.java">web接口:SseController</a>
+<a href="https://github.com/Litaibai-Geek/sse.luochengbin.com/blob/master/ruoyi-admin/src/main/java/com/ruoyi/web/controller/sse/service/ChatService.java">Deepseek模式：ChatService</a>
+<a href="https://github.com/Litaibai-Geek/sse.luochengbin.com/blob/master/ruoyi-admin/src/main/java/com/ruoyi/web/controller/sse/service/LocalChatService.java">Local模式：LocalChatService</a>
 
-## VUE 客户端实现细节
+## VUE 客户端代码实现细节
 <a href="https://github.com/Litaibai-Geek/sse.luochengbin.com/blob/master/ruoyi-ui/src/views/front/sse/index.vue">front/sse/index.vue</a>
 
 ## 遇到的问题：
