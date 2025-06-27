@@ -133,6 +133,7 @@ event: close
 4.运行后端程序
 ``
     ps -ef | grep java
+    kill -9 xxx
     nohup java -jar ruoyi-admin-sse.jar > output.log 2>&1 &
 ``
 5.DNS解析到服务器
@@ -171,6 +172,6 @@ event: close
 ## 可优化点：
 1.记录用户登录状态，保存用户历史输入数据
 2.数据返回后的样式问题
-3.火山引擎提供的api不支持流式返回，只能等待数据全部返回， 否则可以直接调用api流式输出，提升速度。
+3.火山引擎提供的api不支持流式返回，只能等待数据全部返回， 替换支持流式输出的api，提升速度。
 
 

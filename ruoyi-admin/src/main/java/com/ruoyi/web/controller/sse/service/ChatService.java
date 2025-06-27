@@ -82,6 +82,8 @@ public class ChatService {
                 .messages(messages)
                 .build();
 
+            StringBuilder responseBuilder = new StringBuilder();
+
             arkService.streamChatCompletion(request)
                 .doOnError(throwable -> {
                     emitter.completeWithError(throwable);
@@ -90,10 +92,15 @@ public class ChatService {
                     if (!delta.getChoices().isEmpty()) {
                         String content = (String) delta.getChoices().get(0).getMessage().getContent();
                         if (content != null && !content.isEmpty()) {
-                            // 发送消息事件，使用JSON格式
-                            emitter.send(SseEmitter.event()
-                                .name("message")
-                                .data("{\"v\": \"" + content.replace("\"", "\\\"") + "\"}"));
+                            responseBuilder.append(content);
+                            // 将新内容按字符发送
+                            char[] chars = content.toCharArray();
+                            for (char c : chars) {
+                                emitter.send(SseEmitter.event()
+                                    .name("message")
+                                    .data("{\"v\": \"" + c + "\"}"));
+                                Thread.sleep(50); // 模拟打字速度
+                            }
                         }
                     }
                 });

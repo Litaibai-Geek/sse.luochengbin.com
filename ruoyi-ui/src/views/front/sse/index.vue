@@ -143,7 +143,8 @@ export default {
       // 创建 EventSource 实例
       const encodedQuestion = encodeURIComponent(this.question.trim());
       const timestamp = new Date().getTime();
-      const url = `/prod-api/sse/stream?question=${encodedQuestion}&_t=${timestamp}`;
+      const mode = this.currentMode.toLowerCase();
+      const url = `/prod-api/sse/stream?question=${encodedQuestion}&mode=${mode}&_t=${timestamp}`;
       this.eventSource = new EventSource(url);
 
       // 监听ready事件
