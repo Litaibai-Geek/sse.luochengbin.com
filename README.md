@@ -12,6 +12,12 @@ Server-Sent Events (SSE) 是一种服务器推送技术，允许服务器向客�
 * 2.自动重连机制
 * 3.轻量级，资源消耗少
 * 4.天然支持文本传输，特别适合流式数据
+* 参考资料：
+        https://juejin.cn/post/7459623813039554594
+        https://blog.csdn.net/sinat_17445041/article/details/148570300
+        https://blog.csdn.net/m0_46188681/article/details/146129940
+        https://www.deepseek.com/
+        ...
 
 ## SSE 与相关技术对比
 <img src="https://luochengbin.com/static/img/sse/contrast.png"/>
@@ -150,6 +156,8 @@ data: {"v": "也很"}
 
 event: close
 ``
+
+
 ## 项目部署
 1.购买域名：https://www.spaceship.com/
 2.前后端修改为生产环境：/prod-api/，运行bin/package.bat 打成jar包，上传到服务器
