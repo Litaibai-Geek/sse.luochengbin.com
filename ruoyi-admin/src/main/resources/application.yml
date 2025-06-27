@@ -21,6 +21,7 @@ volcengine:
     api-key: 8d6d4836-30fb-4a45-8930-7c2d1d44dc84
     base-url: https://ark.cn-beijing.volces.com/api/v3
     model: deepseek-r1-250120
+    mode: api # api或local
     timeout: 1800
     connect-timeout: 20
     connection-pool-size: 5
@@ -29,7 +30,7 @@ volcengine:
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
-  port: 8080
+  port: 18888
   servlet:
     # 应用的访问路径
     context-path: /

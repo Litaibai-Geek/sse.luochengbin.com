@@ -39,11 +39,15 @@
         </div>
         <div class="button-container">
           <div class="left-buttons">
-            <el-dropdown trigger="click">
+            <el-dropdown trigger="click" @command="handleModeChange">
               <el-button type="text">
-                DeepSeek
+                {{ currentMode }}
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="deepseek">DeepSeek</el-dropdown-item>
+                <el-dropdown-item command="local">Local</el-dropdown-item>
+              </el-dropdown-menu>
             </el-dropdown>
             <el-button type="text">
               <i class="el-icon-reading"></i>
@@ -55,10 +59,8 @@
             </el-button>
           </div>
           <div class="right-buttons">
-            <el-button type="text" icon="el-icon-refresh-right"></el-button>
-            <el-button type="text" icon="el-icon-download"></el-button>
-            <el-button 
-              type="primary" 
+            <el-button
+              type="primary"
               icon="el-icon-position"
               :disabled="isConnected || !question.trim()"
               @click="startSSE"
@@ -86,10 +88,14 @@ export default {
       question: "",
       typingSpeed: 50,
       messageQueue: [],
-      messageList: []
+      messageList: [],
+      currentMode: "DeepSeek"
     };
   },
   methods: {
+    handleModeChange(mode) {
+      this.currentMode = mode === 'local' ? 'Local' : 'DeepSeek';
+    },
     handleEnter(e) {
       // 如果按下shift键，则不发送
       if (e.shiftKey) {
@@ -117,7 +123,7 @@ export default {
         type: 'question',
         content: this.question.trim()
       });
-      
+
       // 添加一个空的回答，用于显示打字效果
       const answerIndex = this.messageList.length;
       this.messageList.push({
@@ -133,11 +139,11 @@ export default {
       this.receivedMessage = "";
       this.displayMessage = "";
       this.messageQueue = [];
-      
+
       // 创建 EventSource 实例
       const encodedQuestion = encodeURIComponent(this.question.trim());
       const timestamp = new Date().getTime();
-      const url = `/dev-api/sse/stream?question=${encodedQuestion}&_t=${timestamp}`;
+      const url = `/prod-api/sse/stream?question=${encodedQuestion}&_t=${timestamp}`;
       this.eventSource = new EventSource(url);
 
       // 监听ready事件
@@ -159,7 +165,7 @@ export default {
           const text = data.v;
           this.receivedMessage += text;
           this.messageQueue.push(text);
-          
+
           if (!this.isTyping) {
             this.processMessageQueue(answerIndex);
           }
@@ -210,7 +216,7 @@ export default {
 
       this.isTyping = true;
       const text = this.messageQueue.shift();
-      
+
       for (let i = 0; i < text.length; i++) {
         this.messageList[answerIndex].content += text[i];
         const isPunctuation = /[，。！？、：；]/.test(text[i]);
@@ -225,7 +231,7 @@ export default {
           this.messageList[answerIndex].content += ' ';
         }
       }
-      
+
       this.processMessageQueue(answerIndex);
     },
     finishSSE(answerIndex) {
@@ -492,4 +498,4 @@ export default {
     padding: 4px;
   }
 }
-</style> 
+</style>

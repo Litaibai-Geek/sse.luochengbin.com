@@ -19,14 +19,22 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class ChatService {
     private final VolcengineConfig config;
+    private final LocalChatService localChatService;
     private ArkService arkService;
 
-    public ChatService(VolcengineConfig config) {
+    public ChatService(VolcengineConfig config, LocalChatService localChatService) {
         this.config = config;
+        this.localChatService = localChatService;
     }
 
     @PostConstruct
     public void init() {
+        if ("api".equals(config.getMode())) {
+            initArkService();
+        }
+    }
+
+    private void initArkService() {
         ConnectionPool connectionPool = new ConnectionPool(
             config.getConnectionPoolSize(),
             config.getConnectionPoolKeepAlive(),
@@ -52,6 +60,11 @@ public class ChatService {
     }
 
     public void streamChat(String prompt, SseEmitter emitter) {
+        if ("local".equals(config.getMode())) {
+            localChatService.streamChat(prompt, emitter);
+            return;
+        }
+
         try {
             // 发送ready事件
             emitter.send(SseEmitter.event()
@@ -95,5 +108,4 @@ public class ChatService {
             emitter.completeWithError(e);
         }
     }
-
 } 

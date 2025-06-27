@@ -9,6 +9,7 @@ public class VolcengineConfig {
     private String apiKey;
     private String baseUrl;
     private String model;
+    private String mode;
     private Integer timeout;
     private Integer connectTimeout;
     private Integer connectionPoolSize;
@@ -37,6 +38,14 @@ public class VolcengineConfig {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
     public Integer getTimeout() {
